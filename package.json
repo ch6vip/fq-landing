@@ -1,0 +1,15 @@
+{
+  "name": "fq-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "什锦铺（fqapp）产品落地页 — 静态站点，无构建依赖",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "start": "node scripts/serve.mjs",
+    "fonts": "python scripts/build_fonts.py"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "GPL-3.0"
+}

@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>什锦铺 — 让阅读和追剧，简单一点</title>
+<meta name="description" content="什锦铺（fqapp）是一款开源的小说、听书、短剧、漫剧、漫画聚合应用，支持 Android 与 Windows。可导入 TXT / EPUB，书架、进度与缓存保存在本机。">
+<meta name="theme-color" content="#F4F3EF">
+<meta name="color-scheme" content="light dark">
+<script>
+  /* Set theme before first paint to avoid a light flash, and mark JS as
+     available so reveal animations never hide content for no-JS readers. */
+  (function () {
+    var theme = null;
+    try { theme = localStorage.getItem("fq-landing-theme"); } catch (e) {}
+    if (theme !== "light" && theme !== "dark") {
+      theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    document.documentElement.setAttribute("data-theme", theme);
+    document.documentElement.classList.add("js");
+  })();
+</script>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="preload" href="assets/fonts/NotoSerifSC-Regular-subset.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/NotoSerifSC-Bold-subset.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/styles.css">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="什锦铺 — 让阅读和追剧，简单一点">
+<meta property="og:description" content="小说、听书、短剧、漫剧、漫画，都收在同一间铺子里。开源、免费，支持 Android 与 Windows。">
+<meta property="og:image" content="assets/img/og.jpg">
+<!-- 部署到正式域名后，把 og:image / twitter:image 换成绝对地址，例如 https://example.com/assets/img/og.jpg -->
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="什锦铺首页：让阅读和追剧，简单一点">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="assets/img/og.jpg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "什锦铺",
+  "alternateName": "fqapp",
+  "description": "支持 Android 与 Windows 的开源阅读与影音应用：小说、听书、短剧、漫剧、漫画。",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Android 7.0+, Windows 10, Windows 11",
+  "softwareVersion": "1.0.201",
+  "inLanguage": "zh-CN",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+  "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+  "url": "https://github.com/ch6vip/novel-sound",
+  "downloadUrl": "https://github.com/ch6vip/novel-sound/releases/latest",
+  "sameAs": ["https://github.com/ch6vip/novel-sound"]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到主要内容</a>
+
+<header class="site-header" id="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">
+      <img src="assets/img/logo.webp" alt="" width="38" height="38">
+      <span class="brand-text">
+        <span class="brand-cn">什锦铺</span>
+        <span class="brand-en">SHIJINPU · STORY ARCHIVE</span>
+      </span>
+    </a>
+
+    <nav class="nav" id="site-nav" aria-label="主导航">
+      <a href="#features">功能</a>
+      <a href="#themes">外观</a>
+      <a href="#reader">阅读</a>
+      <a href="#shelf">书架</a>
+      <a href="#download">下载</a>
+      <a href="#faq">常见问题</a>
+    </nav>
+
+    <div class="header-actions">
+      <span class="version-chip" title="当前版本">v1.0.201</span>
+      <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="切换深浅色" aria-pressed="false">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M21.5 12h-2.2M4.7 12H2.5M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6M18.7 18.7l-1.6-1.6M6.9 6.9L5.3 5.3"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.6A8.5 8.5 0 0 1 9.4 4a8.5 8.5 0 1 0 10.6 10.6Z"/></svg>
+      </button>
+      <a class="btn btn-primary btn-sm" href="#download">下载<svg class="i-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>
+      <button class="icon-btn nav-toggle" id="nav-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="site-nav">
+        <span class="burger"><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- ══════════ HERO ══════════ -->
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="kicker"><span class="dot"></span>开源 · Android / Windows · GPL-3.0</p>
+        <h1>让阅读和追剧，<br><span class="hl">简单一点</span>。</h1>
+        <p class="lead">小说、听书、短剧、漫剧、漫画，都收在同一间铺子里。在线看故事，也能导入自己的电子书，把喜欢的作品和阅读进度留在书架里。</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="https://github.com/ch6vip/novel-sound/releases/latest/download/app-arm64-v8a-release.apk">
+            下载安卓版
+            <svg class="i-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="https://github.com/ch6vip/novel-sound/releases/latest">
+            Windows 版
+            <svg class="i-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+        <ul class="hero-meta">
+          <li>最新版 v1.0.201</li>
+          <li>Android 7.0+</li>
+          <li>Windows 10 / 11</li>
+          <li>无需注册</li>
+        </ul>
+      </div>
+
+      <div class="hero-stage" aria-label="什锦铺首页的三种外观：浅色、深色与墨水屏">
+        <div class="stage-paper" aria-hidden="true"></div>
+        <span class="stage-mark stage-mark-tl" aria-hidden="true">CLASSIC / 01</span>
+        <span class="stage-mark stage-mark-br" aria-hidden="true">SHIJINPU</span>
+
+        <div class="phones">
+          <figure class="phone phone-a">
+            <img src="assets/img/home-light.webp" alt="浅色外观的什锦铺首页：封面书架、排行榜与推荐流" width="390" height="845" fetchpriority="high">
+          </figure>
+          <figure class="phone phone-b">
+            <img src="assets/img/home-dark.webp" alt="深色外观的什锦铺首页：深色界面与封面书架" width="390" height="845" fetchpriority="high">
+          </figure>
+          <figure class="phone phone-c">
+            <img src="assets/img/home-eink.webp" alt="墨水屏外观的什锦铺首页：纯黑白、无过渡动画" width="390" height="845" loading="lazy">
+          </figure>
+        </div>
+
+        <p class="phone-legend"><span>浅色</span><i aria-hidden="true"></i><span>深色</span><i aria-hidden="true"></i><span>墨水屏</span></p>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <ul class="fact-strip">
+        <li><span class="fact-no">01</span><span><b>五种内容</b>小说 · 听书 · 短剧 · 漫剧 · 漫画</span></li>
+        <li><span class="fact-no">02</span><span><b>两个平台</b>Android 与 Windows</span></li>
+        <li><span class="fact-no">03</span><span><b>本机保存</b>书架、进度与缓存留在本机</span></li>
+        <li><span class="fact-no">04</span><span><b>开源免费</b>GPL-3.0，代码公开</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══════════ 01 FEATURES ══════════ -->
+  <section class="section" id="features">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-no">01</span>
+        <div class="sec-titles">
+          <h2>一间铺子，五种内容</h2>
+          <p class="sec-en">FIVE FORMS · ONE SHELF</p>
+        </div>
+        <span class="sec-rule" aria-hidden="true"></span>
+        <span class="sec-side">CATALOG</span>
+      </div>
+
+      <div class="catalog">
+        <article class="card card-feature reveal">
+          <div class="card-top">
+            <span class="card-no">01 / NOVEL</span>
+            <svg class="card-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 7.5c4.5-1.2 8-.4 11 1.8V26c-3-2.2-6.5-3-11-1.8Z"/><path d="M27 7.5c-4.5-1.2-8-.4-11 1.8V26c3-2.2 6.5-3 11-1.8Z"/></svg>
+          </div>
+          <h3>小说</h3>
+          <p>在线阅读，也能导入自己的 TXT / EPUB 电子书。字体、字号、翻页方式随心调。</p>
+          <p class="card-foot"><span>在线阅读</span><span>导入图书</span></p>
+        </article>
+
+        <article class="card card-feature reveal" style="--d:.06s">
+          <div class="card-top">
+            <span class="card-no">02 / AUDIO</span>
+            <svg class="card-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 19v-4a11 11 0 0 1 22 0v4"/><rect x="3.5" y="17.5" width="5.5" height="9" rx="2.4"/><rect x="23" y="17.5" width="5.5" height="9" rx="2.4"/></svg>
+          </div>
+          <h3>听书</h3>
+          <p>系统朗读和真人有声书，可调倍速、定时停止，支持后台播放。</p>
+          <p class="card-foot"><span>系统朗读</span><span>有声书</span></p>
+        </article>
+
+        <article class="card card-feature reveal" style="--d:.12s">
+          <div class="card-top">
+            <span class="card-no">03 / DRAMA</span>
+            <svg class="card-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="7" width="24" height="18" rx="3"/><path d="M13.5 12.5l6 3.5-6 3.5Z"/></svg>
+          </div>
+          <h3>短剧</h3>
+          <p>短剧集中浏览，自动保存播放进度，下次打开接着看。</p>
+          <p class="card-foot"><span>集中浏览</span><span>进度记忆</span></p>
+        </article>
+
+        <article class="card card-feature reveal" style="--d:.18s">
+          <div class="card-top">
+            <span class="card-no">04 / MOTION</span>
+            <svg class="card-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="3.5" y="6" width="15" height="20" rx="2.5"/><path d="M22 8.5h6v15h-6z"/><path d="M7.5 10.5h7M7.5 14h7M7.5 17.5h4"/></svg>
+          </div>
+          <h3>漫剧</h3>
+          <p>漫剧和漫画同架浏览，按作品名称或编号搜索。</p>
+          <p class="card-foot"><span>按名搜索</span><span>按编号搜索</span></p>
+        </article>
+
+        <article class="card card-feature card-wide reveal" style="--d:.24s">
+          <div class="card-top">
+            <span class="card-no">05 / COMICS</span>
+            <svg class="card-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="3.5" y="5" width="11" height="9" rx="1.6"/><rect x="17.5" y="5" width="11" height="14" rx="1.6"/><rect x="3.5" y="17" width="11" height="10" rx="1.6"/><path d="M20 23.5h6"/><path d="M20 27h4"/></svg>
+          </div>
+          <h3>漫画</h3>
+          <p>看到哪记到哪。收藏、分组整理，把读过的作品留在自己的书架上。</p>
+          <p class="card-foot"><span>自动记录</span><span>收藏分组</span></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 02 THEMES ══════════ -->
+  <section class="section section-tint" id="themes">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-no">02</span>
+        <div class="sec-titles">
+          <h2>为长时间阅读而做</h2>
+          <p class="sec-en">APPEARANCE · CLASSIC</p>
+        </div>
+        <span class="sec-rule" aria-hidden="true"></span>
+        <span class="sec-side">LIGHT / DARK / INK</span>
+      </div>
+
+      <div class="appearance">
+        <div class="appearance-visual reveal">
+          <div class="phone phone-lg">
+            <img id="appearance-img" src="assets/img/home-light.webp" alt="浅色外观的什锦铺首页" width="390" height="845">
+          </div>
+          <div class="appearance-label" aria-hidden="true">
+            <span class="appearance-dot"></span>
+            <span id="appearance-label-text">01 / LIGHT</span>
+          </div>
+        </div>
+
+        <div class="appearance-copy reveal" style="--d:.08s">
+          <div class="tabs" role="tablist" aria-label="选择外观">
+            <button class="tab is-active" role="tab" id="tab-light" aria-selected="true" aria-controls="appearance-panel" data-appearance="light"
+              data-src="assets/img/home-light.webp" data-alt="浅色外观的什锦铺首页"
+              data-label="01 / LIGHT" data-title="浅色 · 日间" data-ink="#292724"
+              data-desc="白底、红字与封面网格。排行榜、推荐流和封面书架一眼看清，白天阅读干净不刺眼。">
+              浅色
+            </button>
+            <button class="tab" role="tab" id="tab-dark" aria-selected="false" aria-controls="appearance-panel" tabindex="-1" data-appearance="dark"
+              data-src="assets/img/home-dark.webp" data-alt="深色外观的什锦铺首页"
+              data-label="02 / DARK" data-title="深色 · 夜间" data-ink="#D2D2D2"
+              data-desc="深灰底、柔和文字，夜里把光留给自己。封面与卡片在深色背景上依然清楚。">
+              深色
+            </button>
+            <button class="tab" role="tab" id="tab-eink" aria-selected="false" aria-controls="appearance-panel" tabindex="-1" data-appearance="eink"
+              data-src="assets/img/home-eink.webp" data-alt="墨水屏外观的什锦铺首页"
+              data-label="03 / INK" data-title="墨水屏 · 纯黑白" data-ink="#1A1916"
+              data-desc="纯黑白、无毛玻璃、无过渡动画，减少墨水屏的量化灰阶和残影。翻页即换，不拖泥带水。">
+              墨水屏
+            </button>
+          </div>
+
+          <div class="appearance-panel" id="appearance-panel" role="tabpanel" aria-labelledby="tab-light">
+            <h3 id="appearance-title">浅色 · 日间</h3>
+            <p id="appearance-desc">白底、红字与封面网格。排行榜、推荐流和封面书架一眼看清，白天阅读干净不刺眼。</p>
+            <ul class="ticks" id="appearance-points">
+              <li>白色画布与红色强调色</li>
+              <li>封面书架，进度角标一眼可见</li>
+              <li>跟随系统，也能手动切换</li>
+            </ul>
+          </div>
+
+          <div class="monet-note">
+            <span class="monet-tag">APPEARANCE</span>
+            <p>浅色、深色与墨水屏可以跟随系统，也能在「设置 → 外观」里手动切换；经典与档案两套界面风格同样随时互换。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 03 READER ══════════ -->
+  <section class="section" id="reader">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-no">03</span>
+        <div class="sec-titles">
+          <h2>读自己的书，用自己的光</h2>
+          <p class="sec-en">READ · WK-00071</p>
+        </div>
+        <span class="sec-rule" aria-hidden="true"></span>
+        <span class="sec-side">TYPOGRAPHY</span>
+      </div>
+
+      <div class="reader-grid">
+        <div class="reader-copy reveal">
+          <h3>字号、行距、翻页，<br>都按你的习惯来。</h3>
+          <p>点击屏幕中间就能调整阅读设置。六种底色之外，字体、字号与翻页方式也都能改。</p>
+
+          <div class="reader-demo" id="reader-demo" data-preset="light">
+            <div class="demo-head">
+              <span class="demo-title">试读样张</span>
+              <span class="demo-meta" id="demo-meta">米白 · #FAF9F6</span>
+            </div>
+            <p class="demo-text" id="demo-text">末班渡轮离开码头时，岸上的灯恰好一盏盏亮起来。夏遥把书合在膝上，听见风从翻起的纸页之间穿过。</p>
+            <div class="demo-swatches" role="group" aria-label="阅读底色">
+              <button type="button" class="swatch is-active" data-preset="light" data-bg="#FAF9F6" data-ink="#292724" data-name="米白" aria-pressed="true" title="米白"><span style="background:#FAF9F6"></span></button>
+              <button type="button" class="swatch" data-preset="eyeCare" data-bg="#E8F1DF" data-ink="#273128" data-name="青绿" aria-pressed="false" title="青绿"><span style="background:#E8F1DF"></span></button>
+              <button type="button" class="swatch" data-preset="parchment" data-bg="#F3E4C2" data-ink="#493D2B" data-name="纸张" aria-pressed="false" title="纸张"><span style="background:#F3E4C2"></span></button>
+              <button type="button" class="swatch" data-preset="mistBlue" data-bg="#D8E4F0" data-ink="#243447" data-name="雾蓝" aria-pressed="false" title="雾蓝"><span style="background:#D8E4F0"></span></button>
+              <button type="button" class="swatch swatch-dark" data-preset="dark" data-bg="#171717" data-ink="#D2D2D2" data-name="夜间" aria-pressed="false" title="夜间"><span style="background:#171717"></span></button>
+              <button type="button" class="swatch" data-preset="eink" data-bg="#FFFFFF" data-ink="#000000" data-name="墨水屏" aria-pressed="false" title="墨水屏"><span style="background:#FFFFFF"></span></button>
+            </div>
+          </div>
+
+          <ul class="feature-list">
+            <li><span class="fl-no">01</span><span><b>导入自己的书</b>在书架菜单选择「导入图书」，打开 TXT / EPUB 文件。</span></li>
+            <li><span class="fl-no">02</span><span><b>听书不误事</b>系统朗读与真人有声书，倍速、定时停止、后台播放。</span></li>
+            <li><span class="fl-no">03</span><span><b>进度自己记</b>阅读与播放位置自动保存，下次打开接着看。</span></li>
+          </ul>
+        </div>
+
+        <div class="reader-visual reveal" style="--d:.08s">
+          <div class="reader-phone phone">
+            <img src="assets/img/reader.webp" alt="什锦铺阅读页：正文、段落互动气泡与全书进度" width="390" height="845" loading="lazy">
+          </div>
+          <div class="reader-caption">
+            <span>READ / 楔子</span>
+            <span>全书 5.9%</span>
+          </div>
+          <div class="reader-float">
+            <img src="assets/img/theme.webp" alt="主题设置页：经典主题与档案主题二选一" width="390" height="845" loading="lazy">
+            <span>主题 · 经典 / 档案</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 04 SHELF ══════════ -->
+  <section class="section section-tint" id="shelf">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-no">04</span>
+        <div class="sec-titles">
+          <h2>把书架，留在自己手里</h2>
+          <p class="sec-en">SHELF · OFFLINE · BACKUP</p>
+        </div>
+        <span class="sec-rule" aria-hidden="true"></span>
+        <span class="sec-side">LOCAL FIRST</span>
+      </div>
+
+      <div class="shelf-grid">
+        <article class="shelf-card reveal">
+          <span class="shelf-no">01</span>
+          <h3>整理书架</h3>
+          <p>收藏喜欢的作品，按分组整理。想找的时候，按名称或编号搜索。</p>
+          <ul class="mini-ticks"><li>收藏与分组</li><li>名称 / 编号搜索</li><li>阅读与播放进度</li></ul>
+        </article>
+        <article class="shelf-card reveal" style="--d:.06s">
+          <span class="shelf-no">02</span>
+          <h3>离线也能看</h3>
+          <p>提前下载内容，没网时继续阅读或播放。启动时还能直接选择「离线阅读」。</p>
+          <ul class="mini-ticks"><li>离线缓存管理</li><li>已缓存章节</li><li>已下载媒体</li></ul>
+        </article>
+        <article class="shelf-card reveal" style="--d:.12s">
+          <span class="shelf-no">03</span>
+          <h3>换设备，搬家</h3>
+          <p>导出备份文件，传到新设备后选择「从备份文件恢复」，预览确认再写入。</p>
+          <ul class="mini-ticks"><li>收藏与书架分组</li><li>阅读和播放进度</li><li>已看剧集</li></ul>
+        </article>
+      </div>
+
+      <div class="notice reveal">
+        <span class="notice-mark" aria-hidden="true">!</span>
+        <p><b>备份不包含</b>本地电子书、下载缓存、阅读时长、划线和设置。导出前先退出阅读或暂停播放，让进度保存；本地书文件请单独保留。</p>
+      </div>
+
+      <div class="shelf-visual reveal">
+        <figure class="shelf-shot">
+          <img src="assets/img/shelf.webp" alt="经典主题的书架：封面网格与阅读进度角标" width="390" height="845" loading="lazy">
+        </figure>
+        <div class="shelf-quote">
+          <p class="quote-large">“把喜欢的作品和进度，<br>留在自己的书架上。”</p>
+          <p class="quote-small">书架、进度和缓存保存在设备上。只有开启 AI 校对或云端同步时，相关内容才会发送到你选择的服务——使用前请阅读应用内说明。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 05 DOWNLOAD ══════════ -->
+  <section class="section" id="download">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-no">05</span>
+        <div class="sec-titles">
+          <h2>下载什锦铺</h2>
+          <p class="sec-en">DOWNLOAD · V1.0.201</p>
+        </div>
+        <span class="sec-rule" aria-hidden="true"></span>
+        <span class="sec-side">FREE · OPEN SOURCE</span>
+      </div>
+
+      <div class="download-grid">
+        <article class="dl-card reveal">
+          <div class="dl-head">
+            <div class="dl-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="8" y="3" width="16" height="26" rx="3"/><path d="M13.5 6.5h5"/><circle cx="16" cy="25" r="1.1"/></svg></div>
+            <div>
+              <h3>Android</h3>
+              <p class="dl-req">Android 7.0 及以上</p>
+            </div>
+            <span class="dl-badge">推荐</span>
+          </div>
+          <a class="btn btn-primary btn-block" href="https://github.com/ch6vip/novel-sound/releases/latest/download/app-arm64-v8a-release.apk">
+            下载推荐安装包
+            <svg class="i-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          </a>
+          <p class="dl-file"><code>app-arm64-v8a-release.apk</code><span>大多数手机</span></p>
+          <a class="dl-alt" href="https://github.com/ch6vip/novel-sound/releases/latest/download/app-armeabi-v7a-release.apk">旧款 32 位设备，使用备用安装包</a>
+        </article>
+
+        <article class="dl-card reveal" style="--d:.08s">
+          <div class="dl-head">
+            <div class="dl-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="5" width="26" height="17" rx="2.5"/><path d="M11 27h10M16 22v5"/></svg></div>
+            <div>
+              <h3>Windows</h3>
+              <p class="dl-req">Windows 10 / 11，64 位</p>
+            </div>
+          </div>
+          <a class="btn btn-primary btn-block" href="https://github.com/ch6vip/novel-sound/releases/latest">
+            进入下载页
+            <svg class="i-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          </a>
+          <p class="dl-file"><code>fqapp.exe</code><span>下载压缩包，完整解压后运行</span></p>
+          <a class="dl-alt" href="https://github.com/ch6vip/novel-sound/blob/main/WINDOWS.md">Windows 使用说明</a>
+        </article>
+      </div>
+
+      <div class="dl-notes reveal">
+        <p><b>安装小提示</b>Windows 版请完整解压压缩包，保留同目录的其他文件；安卓安装包来自 GitHub Releases。</p>
+        <p><b>其他平台</b>目前没有正式的 Linux、iPhone 或 Mac 安装包。Linux / Arch 社区移植正在推进，见 <a href="https://github.com/ch6vip/novel-sound/issues/308">#308</a>；安装包与更新说明见 <a href="https://github.com/ch6vip/novel-sound/releases/latest">Releases</a>。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 06 FAQ ══════════ -->
+  <section class="section section-tint" id="faq">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-no">06</span>
+        <div class="sec-titles">
+          <h2>常见问题</h2>
+          <p class="sec-en">FAQ · SUPPORT</p>
+        </div>
+        <span class="sec-rule" aria-hidden="true"></span>
+        <span class="sec-side">BEFORE YOU ASK</span>
+      </div>
+
+      <div class="faq-list">
+        <details class="faq reveal">
+          <summary><span class="faq-no">01</span><span>没网也能用吗？</span><span class="faq-mark" aria-hidden="true"></span></summary>
+          <div class="faq-body"><p>可以看已导入的电子书、读已缓存的章节、播放已下载的媒体。只有已下载完成的内容才能离线使用，搜索和获取新内容仍需要联网。启动时可选择「离线阅读」。</p></div>
+        </details>
+        <details class="faq reveal" style="--d:.04s">
+          <summary><span class="faq-no">02</span><span>一直加载、搜索失败或播放不了，怎么办？</span><span class="faq-mark" aria-hidden="true"></span></summary>
+          <div class="faq-body"><p>先检查网络，换个网络或重启应用再试。在线内容依赖第三方服务，对方调整或网络波动可能导致暂时不可用。</p><p>持续失败请在 GitHub 提交反馈，附上应用版本、设备型号、作品名称或编号，以及错误截图。</p></div>
+        </details>
+        <details class="faq reveal" style="--d:.08s">
+          <summary><span class="faq-no">03</span><span>换设备怎么搬书架和进度？</span><span class="faq-mark" aria-hidden="true"></span></summary>
+          <div class="faq-body"><p>在「我的 → 备份与导入」导出备份文件，传到新设备后选择「从备份文件恢复」，预览并确认。</p><p>备份包含收藏、书架分组、已保存的阅读和播放进度、已看剧集；不包含本地电子书、下载缓存、阅读时长、划线和设置。本地书文件请单独保留。</p></div>
+        </details>
+        <details class="faq reveal" style="--d:.12s">
+          <summary><span class="faq-no">04</span><span>系统朗读没有声音？</span><span class="faq-mark" aria-hidden="true"></span></summary>
+          <div class="faq-body"><p>检查媒体音量，并确认设备安装了语音引擎和中文音色。在「设置 → 听书 → 系统朗读」选择可用语音；Windows 用户可在系统语音设置中安装中文音色。</p></div>
+        </details>
+        <details class="faq reveal" style="--d:.16s">
+          <summary><span class="faq-no">05</span><span>免费吗？开源吗？</span><span class="faq-mark" aria-hidden="true"></span></summary>
+          <div class="faq-body"><p>免费，并且以 GPL-3.0 协议开源，代码在 GitHub 上公开。如果它让你的阅读和追剧方便了一点，可以自愿赞助支持后续更新。</p></div>
+        </details>
+        <details class="faq reveal" style="--d:.2s">
+          <summary><span class="faq-no">06</span><span>会上传我的阅读数据吗？</span><span class="faq-mark" aria-hidden="true"></span></summary>
+          <div class="faq-body"><p>书架、进度和缓存保存在你的设备上。如果开启 AI 校对或云端同步，相关内容会发送到你选择的服务，使用前请阅读应用内说明。</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 07 SUPPORT ══════════ -->
+  <section class="section support" id="support">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-no">07</span>
+        <div class="sec-titles">
+          <h2>一起把这间铺子开下去</h2>
+          <p class="sec-en">JOIN · SUPPORT</p>
+        </div>
+        <span class="sec-rule" aria-hidden="true"></span>
+        <span class="sec-side">COMMUNITY</span>
+      </div>
+
+      <div class="support-grid">
+        <div class="support-qr reveal">
+          <img src="assets/img/qq-group.png" alt="QQ 群二维码：樱道，群号 726870896" width="720" height="1280" loading="lazy">
+          <div class="support-qr-body">
+            <span class="support-tag">QQ 交流群 · 樱道</span>
+            <div class="copy-row">
+              <code id="qq-number">726870896</code>
+              <button class="copy-btn" id="copy-qq" type="button" aria-label="复制群号 726870896">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg>
+                <span>复制</span>
+              </button>
+            </div>
+            <p>用 QQ 扫码，或搜索群号加入。分享使用心得、交流问题。</p>
+          </div>
+        </div>
+
+        <div class="support-side">
+        <div class="support-actions reveal" style="--d:.08s">
+          <a class="support-link" href="https://github.com/ch6vip/novel-sound/stargazers">
+            <span class="sl-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.8 6.2 20.9l1.1-6.5L2.6 9.8l6.5-.9Z"/></svg></span>
+            <span><b>点个 Star</b><small>在 GitHub 上收藏这个项目</small></span>
+            <svg class="i-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="support-link" href="https://github.com/ch6vip/novel-sound/issues">
+            <span class="sl-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M12 8v5M12 16.5v.2"/><path d="M21 3v6h-6"/></svg></span>
+            <span><b>反馈问题</b><small>带上版本、设备与截图</small></span>
+            <svg class="i-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="support-link" href="https://github.com/ch6vip/novel-sound/blob/main/CONTRIBUTING.md">
+            <span class="sl-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3v12a3 3 0 0 0 3 3h5"/><circle cx="5.5" cy="5.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
+            <span><b>参与改进</b><small>查看贡献指南与开发文档</small></span>
+            <svg class="i-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+
+        <div class="support-sponsor reveal" style="--d:.16s">
+          <div class="sponsor-copy">
+            <span class="support-tag">SPONSOR</span>
+            <h3>请作者喝杯咖啡</h3>
+            <p>通过爱发电、微信或支付宝赞助，支持后续更新。完全自愿。</p>
+            <a class="text-link" href="https://afdian.com/a/ch6vip">前往爱发电 <span aria-hidden="true">↗</span></a>
+          </div>
+          <img src="assets/img/support.png" alt="赞助二维码：微信支付与支付宝" width="1200" height="857" loading="lazy">
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-top">
+    <div class="footer-brand">
+      <img src="assets/img/logo.webp" alt="" width="44" height="44">
+      <div>
+        <p class="footer-cn">什锦铺</p>
+        <p class="footer-en">SHIJINPU · STORY ARCHIVE</p>
+      </div>
+    </div>
+    <nav class="footer-nav" aria-label="页脚导航">
+      <a href="#features">功能</a>
+      <a href="#themes">外观</a>
+      <a href="#download">下载</a>
+      <a href="#faq">常见问题</a>
+      <a href="https://github.com/ch6vip/novel-sound">GitHub</a>
+    </nav>
+    <button class="icon-btn theme-toggle" id="theme-toggle-footer" type="button" aria-label="切换深浅色" aria-pressed="false">
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M21.5 12h-2.2M4.7 12H2.5M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6M18.7 18.7l-1.6-1.6M6.9 6.9L5.3 5.3"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.6A8.5 8.5 0 0 1 9.4 4a8.5 8.5 0 1 0 10.6 10.6Z"/></svg>
+    </button>
+  </div>
+
+  <div class="wrap footer-disclaimer">
+    <p>在线内容来自第三方，版权归各自权利人。本项目与内容提供方无隶属关系，不托管作品，不绕过付费或访问权限。</p>
+    <p>书架、进度和缓存保存在设备上。如开启 AI 校对或云端同步，相关内容会发送到你选择的服务，使用前请阅读应用内说明。</p>
+  </div>
+
+  <div class="wrap footer-bottom">
+    <p>© 2026 ch6vip · <a href="https://github.com/ch6vip/novel-sound/blob/main/LICENSE">GPL-3.0</a> 开源</p>
+    <p class="footer-links">
+      <a href="https://github.com/ch6vip/novel-sound">源代码</a>
+      <a href="https://github.com/ch6vip/novel-sound/issues">反馈</a>
+      <a href="https://github.com/ch6vip/novel-sound/blob/main/DEVELOPMENT.md">开发文档</a>
+      <a class="to-top" href="#top">回到顶部 <span aria-hidden="true">↑</span></a>
+    </p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>
