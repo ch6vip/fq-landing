@@ -3,7 +3,7 @@
   "use strict";
 
   var root = document.documentElement;
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
   var THEME_KEY = "fq-landing-theme";
 
   /* ---------- Theme ---------- */
@@ -80,10 +80,6 @@
   window.addEventListener("resize", function () {
     if (window.innerWidth > 860) setNav(false);
   });
-  if (window.matchMedia("(min-width: 861px)").matches) {
-    /* no-op: desktop nav is visible by CSS */
-  }
-
   /* ---------- Scroll spy ---------- */
   var navLinks = Array.prototype.slice.call(nav.querySelectorAll('a[href^="#"]'));
   var spyTargets = navLinks
@@ -96,16 +92,19 @@
   if ("IntersectionObserver" in window && spyTargets.length) {
     var spy = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
+        var match = spyTargets.filter(function (t) { return t.el === entry.target; })[0];
+        if (!match) return;
+        if (!entry.isIntersecting) {
+          match.link.classList.remove("is-current");
+          match.link.removeAttribute("aria-current");
+          return;
+        }
         navLinks.forEach(function (l) {
           l.classList.remove("is-current");
           l.removeAttribute("aria-current");
         });
-        var match = spyTargets.filter(function (t) { return t.el === entry.target; })[0];
-        if (match) {
-          match.link.classList.add("is-current");
-          match.link.setAttribute("aria-current", "true");
-        }
+        match.link.classList.add("is-current");
+        match.link.setAttribute("aria-current", "true");
       });
     }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
     spyTargets.forEach(function (t) { spy.observe(t.el); });
@@ -113,26 +112,21 @@
 
   /* ---------- Reveal on scroll ---------- */
   var revealEls = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
-  if (!("IntersectionObserver" in window) || reduceMotion) {
-    revealEls.forEach(function (el) { el.classList.add("in"); });
-  } else {
-    var revealFired = false;
+  if ("IntersectionObserver" in window && !motionPreference.matches) {
     var revealer = new IntersectionObserver(function (entries) {
-      revealFired = true;
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          entry.target.classList.add("in");
           revealer.unobserve(entry.target);
+          if (motionPreference.matches) return;
+          var el = entry.target;
+          el.addEventListener("animationend", function () {
+            el.classList.remove("is-revealing");
+          }, { once: true });
+          el.classList.add("is-revealing");
         }
       });
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
     revealEls.forEach(function (el) { revealer.observe(el); });
-    /* Last-resort net: only if the observer never delivered a single entry. */
-    window.setTimeout(function () {
-      if (!revealFired) {
-        revealEls.forEach(function (el) { el.classList.add("in"); });
-      }
-    }, 2600);
   }
 
   /* ---------- Appearance tabs ---------- */
@@ -170,19 +164,13 @@
   var appearanceDesc = document.getElementById("appearance-desc");
   var appearancePoints = document.getElementById("appearance-points");
   var appearanceLabel = document.getElementById("appearance-label-text");
-  var appearanceFrame = appearanceImg ? appearanceImg.closest(".phone") : null;
-  var tabSwapTimer = null;
-
-  /* Pre-decode all three screens so switching is instant. */
-  Object.keys(appearanceData).forEach(function (key) {
-    var img = new Image();
-    img.src = appearanceData[key].src;
-    if (img.decode) img.decode().catch(function () {});
-  });
+  var appearanceAnimation = null;
 
   function selectAppearance(key, focusTab) {
     var data = appearanceData[key];
     if (!data || !appearanceImg) return;
+    if (appearanceAnimation) appearanceAnimation.cancel();
+    var imageChanged = appearanceImg.getAttribute("src") !== data.src;
 
     tabs.forEach(function (tab) {
       var active = tab.getAttribute("data-appearance") === key;
@@ -192,19 +180,17 @@
       if (active && focusTab) tab.focus();
     });
 
-    if (appearanceImg.getAttribute("src") !== data.src && !reduceMotion) {
-      appearanceFrame.classList.add("is-swapping");
-      window.clearTimeout(tabSwapTimer);
-      tabSwapTimer = window.setTimeout(function () {
-        applyAppearanceContent(data);
-        appearanceFrame.classList.remove("is-swapping");
-      }, 180);
-    } else {
-      applyAppearanceContent(data);
+    applyAppearanceContent(data);
+    if (imageChanged && !motionPreference.matches) {
+      appearanceAnimation = appearanceImg.animate(
+        [{ opacity: 0.5 }, { opacity: 1 }],
+        { duration: 180, easing: "ease-out" }
+      );
     }
   }
 
   function applyAppearanceContent(data) {
+    appearanceImg.srcset = data.src.replace(".webp", "-300.webp") + " 300w, " + data.src + " 600w";
     appearanceImg.src = data.src;
     appearanceImg.alt = data.alt;
     appearanceTitle.textContent = data.title;
@@ -243,7 +229,6 @@
   /* ---------- Reader demo swatches ---------- */
   var demo = document.getElementById("reader-demo");
   var demoMeta = document.getElementById("demo-meta");
-  var demoText = document.getElementById("demo-text");
   var swatches = Array.prototype.slice.call(document.querySelectorAll(".swatch"));
 
   function applyPreset(btn) {
@@ -251,11 +236,9 @@
     var bg = btn.getAttribute("data-bg");
     var ink = btn.getAttribute("data-ink");
     var name = btn.getAttribute("data-name");
-    demo.style.background = bg;
     demo.style.setProperty("--demo-ink", ink);
     demo.style.setProperty("--demo-bg", bg);
     if (demoMeta) demoMeta.textContent = name + " · " + bg.toUpperCase();
-    if (demoText) demoText.style.color = ink;
     swatches.forEach(function (s) {
       var active = s === btn;
       s.classList.toggle("is-active", active);
@@ -274,6 +257,7 @@
   var qqNumber = document.getElementById("qq-number");
   var toast = document.getElementById("toast");
   var toastTimer = null;
+  var copyLabelTimer = null;
 
   function showToast(message) {
     if (!toast) return;
@@ -306,9 +290,9 @@
         showToast("群号 " + text + " 已复制");
         var label = copyBtn.querySelector("span");
         if (label) {
-          var old = label.textContent;
+          window.clearTimeout(copyLabelTimer);
           label.textContent = "已复制";
-          window.setTimeout(function () { label.textContent = old; }, 1600);
+          copyLabelTimer = window.setTimeout(function () { label.textContent = "复制"; }, 1600);
         }
       };
       if (navigator.clipboard && window.isSecureContext) {
@@ -333,10 +317,5 @@
         if (other !== item) other.open = false;
       });
     });
-  });
-
-  /* ---------- Anchor offset for sticky header ---------- */
-  document.querySelectorAll("main [id]").forEach(function (el) {
-    el.style.scrollMarginTop = "86px";
   });
 })();

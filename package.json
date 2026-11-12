@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "start": "node scripts/serve.mjs",
-    "fonts": "python scripts/build_fonts.py"
+    "fonts": "python scripts/build_fonts.py",
+    "release": "node scripts/sync_release.mjs",
+    "site": "node scripts/configure_site.mjs"
   },
   "engines": {
     "node": ">=18"
