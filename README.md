@@ -51,7 +51,8 @@ fq-landing/
 
 ## 维护脚本
 
-- **同步版本与安装包**：发布应用新版本后运行 `npm run release`。命令从 GitHub 最新正式 Release 校验两个 APK 和 Windows ZIP 的存在性、有效文件大小（十进制 MB）及北京时间发布日期，全部通过后再一次性更新 `index.html` 的版本号、下载直链、包大小、Windows 文件名、更新说明链接与 JSON-LD；支持读取环境变量 `GITHUB_TOKEN` 避免限流。页面访问不调用 GitHub API，禁用 JavaScript 仍可下载。
+- **同步版本与安装包**：发布应用新版本后运行 `npm run release`。命令从 GitHub 最新正式 Release 校验两个 APK 和 Windows ZIP 的存在性、有效文件大小（十进制 MB）及北京时间发布日期，全部通过后再一次性更新 `index.html` 的版本号、下载直链、包大小、Windows 文件名、更新说明链接与 JSON-LD；支持读取环境变量 `GITHUB_TOKEN` 避免限流。页面访问不调用 GitHub API，禁用 JavaScript 仍可直接通过 GitHub 官方直链下载。
+- **下载加速代理**：页面下载区内置「国内加速（`gh-proxy.com`）」与「GitHub 官方」一键切换（默认走国内加速并记住用户选择），HTML 底层链接仍保持 GitHub 官方地址以兼容自动同步与无 JS 降级；如需更换加速域名，修改 `assets/js/main.js` 顶部的 `PROXY_PREFIX` 即可。
 - **自动同步（GitHub Actions）**：仓库内置 `.github/workflows/sync-release.yml`，每 6 小时自动检查主仓库最新正式版，也支持在 Actions 页手动点击运行（`workflow_dispatch`）或由主仓库通过 `repository_dispatch`（`app-release`）即时触发；有版本变化时自动提交并推送 `index.html`。
 - **重生成字体子集**：修改试读样张（`.demo-text`）文案后运行 `npm run fonts`（需 Python、`fonttools`、`brotli`，且同级存在 `../fqapp/assets/fonts`）。主体文案使用现代系统无衬线字体，仅试读台的「宋体」模式与等宽编号加载轻量本地 `woff2`。
 - **配置正式域名**：部署到正式 HTTPS 域名后运行 `npm run site -- https://your-domain.example/`，自动写入 `canonical`、`og:url`、`og:image` 与 `twitter:image`。

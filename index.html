@@ -127,7 +127,7 @@
         </div>
 
         <p class="hero-sublink">
-          <a href="#download">看安装包详情、32 位备用包与安装步骤 <span aria-hidden="true">↓</span></a>
+          <a href="#download" id="hero-mirror-link">看安装包详情、切换下载线路与安装步骤 <span aria-hidden="true">↓</span></a>
         </p>
 
         <ul class="hero-facts" aria-label="核心特点">
@@ -464,7 +464,17 @@
         </div>
       </div>
 
-      <p class="platform-banner reveal" id="platform-hint" role="status">支持 Android 7.0+ 与 64 位 Windows 10 / 11，按你的设备挑一个就行。</p>
+      <div class="dl-toolbar reveal">
+        <p class="platform-banner" id="platform-hint" role="status">支持 Android 7.0+ 与 64 位 Windows 10 / 11，按你的设备挑一个就行。</p>
+        <div class="mirror-switch">
+          <span class="mirror-label">下载线路</span>
+          <div class="segmented segmented-sm" role="group" aria-label="选择下载线路">
+            <button type="button" class="seg-tab" data-mirror="proxy" aria-pressed="false">国内加速</button>
+            <button type="button" class="seg-tab is-active" data-mirror="github" aria-pressed="true">GitHub 官方</button>
+          </div>
+        </div>
+      </div>
+      <p class="mirror-note reveal" id="mirror-note" aria-live="polite">当前直连 GitHub 官方 Releases；开启 JavaScript 后可一键切换第三方公益加速 <code>gh-proxy.com</code>。</p>
 
       <div class="dl-grid">
         <!-- Android Card -->
@@ -596,7 +606,7 @@
         <details class="faq-item reveal" style="--d:.03s">
           <summary><span>下载很慢、点不开链接，或者安卓不知道选哪个包？</span><span class="faq-plus" aria-hidden="true"></span></summary>
           <div class="faq-body">
-            <p>安装包托管在 GitHub，速度受当前网络影响。遇到慢或打不开，可以换个网络重试，或者直接打开 <a data-release href="https://github.com/ch6vip/novel-sound/releases/tag/v1.0.205">本版本发布页</a> 在 Assets 区域挑选；微信或手机内置浏览器拦下载的话，改用系统浏览器打开本页即可。</p>
+            <p>安装包原始文件托管在 GitHub，页面已内置「国内加速（<code>gh-proxy.com</code>）」与「GitHub 官方」两条线路，在上方下载区一键就能切换；如果仍较慢或打不开，可以换个网络重试，或打开 <a data-release href="https://github.com/ch6vip/novel-sound/releases/tag/v1.0.205">本版本发布页</a> 在 Assets 区域手动挑选。微信或手机内置浏览器拦截下载的话，改用系统浏览器打开本页即可。</p>
             <p>版本选择上，现在绝大多数安卓手机和平板直接选默认的 <strong>ARM64</strong> 包；只有较老的 32 位安卓设备才需要用下方的 32 位备用包。</p>
           </div>
         </details>

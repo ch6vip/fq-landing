@@ -5,6 +5,8 @@
   var root = document.documentElement;
   var motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
   var THEME_KEY = "fq-landing-theme";
+  var MIRROR_KEY = "fq-landing-mirror";
+  var PROXY_PREFIX = "https://gh-proxy.com/";
 
   /* ---------- Theme Toggle ---------- */
   function storedTheme() {
@@ -319,6 +321,63 @@
       selectAppearance(segTabs[next].getAttribute("data-appearance"), true);
     });
   }
+
+  /* ---------- Download Mirror Switch ---------- */
+  (function initDownloadMirror() {
+    var mirrorBtns = Array.prototype.slice.call(document.querySelectorAll("[data-mirror]"));
+    var dlLinks = Array.prototype.slice.call(document.querySelectorAll("a[data-download]"));
+    var mirrorNote = document.getElementById("mirror-note");
+    var heroMirrorLink = document.getElementById("hero-mirror-link");
+    if (!mirrorBtns.length || !dlLinks.length) return;
+
+    dlLinks.forEach(function (link) {
+      link.setAttribute("data-origin-href", link.getAttribute("href"));
+    });
+
+    function storedMirror() {
+      try {
+        var saved = localStorage.getItem(MIRROR_KEY);
+        if (saved === "proxy" || saved === "github") return saved;
+      } catch (e) {}
+      return "proxy";
+    }
+
+    function applyMirror(mode, persist) {
+      var useProxy = mode === "proxy";
+      dlLinks.forEach(function (link) {
+        var origin = link.getAttribute("data-origin-href");
+        if (!origin) return;
+        link.setAttribute("href", useProxy ? PROXY_PREFIX + origin : origin);
+      });
+      mirrorBtns.forEach(function (btn) {
+        var active = btn.getAttribute("data-mirror") === mode;
+        btn.classList.toggle("is-active", active);
+        btn.setAttribute("aria-pressed", active ? "true" : "false");
+      });
+      if (mirrorNote) {
+        mirrorNote.innerHTML = useProxy
+          ? '当前使用第三方公益加速 <code>gh-proxy.com</code>（原始文件来自 GitHub Releases），如遇限速或打不开，可随时切回「GitHub 官方」。'
+          : '当前直连 GitHub 官方 Releases；如果国内下载偏慢，可随时切换到「国内加速」。';
+      }
+      if (heroMirrorLink) {
+        heroMirrorLink.innerHTML = useProxy
+          ? '已默认开启国内加速 · 切换官方线路或看安装步骤 <span aria-hidden="true">↓</span>'
+          : '当前直连 GitHub 官方 · 切换国内加速或看安装步骤 <span aria-hidden="true">↓</span>';
+      }
+      if (persist) {
+        try { localStorage.setItem(MIRROR_KEY, mode); } catch (e) {}
+      }
+    }
+
+    applyMirror(storedMirror(), false);
+
+    mirrorBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var next = btn.getAttribute("data-mirror");
+        applyMirror(next, true);
+      });
+    });
+  })();
 
   /* ---------- OS Recommendation ---------- */
   (function detectPlatform() {
