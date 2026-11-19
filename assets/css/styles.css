@@ -1628,7 +1628,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 /* ---------- Community (#community) ---------- */
 .community-grid {
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr);
   gap: 20px;
   align-items: stretch;
 }
@@ -1641,15 +1641,20 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 }
 
 .comm-qq {
-  display: grid;
-  grid-template-columns: 184px minmax(0, 1fr);
-  gap: 24px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 22px;
+  text-align: center;
 }
 .qr-frame {
+  position: relative;
+  display: block;
+  width: 100%;
   background: #ffffff;
   border-radius: 18px;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid rgba(17, 19, 24, 0.08);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
@@ -1658,12 +1663,51 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   width: 100%;
   border-radius: 12px;
 }
+.qr-frame-tall {
+  max-width: 248px;
+}
+.qr-frame-wide {
+  max-width: 520px;
+  margin-inline: auto;
+  padding: 12px;
+}
+.qr-trigger {
+  cursor: zoom-in;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.qr-trigger:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+}
+.qr-zoom-hint {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  padding: 3px 11px;
+  border-radius: var(--radius-pill);
+  background: #f1f3f6;
+  color: #4b5262;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  transition: background-color 0.18s, color 0.18s;
+}
+.qr-trigger:hover .qr-zoom-hint {
+  background: #111318;
+  color: #ffffff;
+}
 
 .comm-qq-body {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 340px;
 }
+.comm-qq-body .bento-tag { align-self: center; }
 .comm-qq-body h3,
 .sponsor-copy h3 {
   font-size: 20px;
@@ -1681,11 +1725,12 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 6px 6px 6px 14px;
+  width: 100%;
+  padding: 6px 6px 6px 16px;
   border-radius: var(--radius-pill);
   background: var(--surface);
   border: 1px solid var(--border);
-  margin-top: 4px;
+  margin-top: 6px;
 }
 .copy-box code {
   font-size: 15px;
@@ -1769,16 +1814,88 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 .comm-link:hover .i-arrow { transform: translateX(3px); color: var(--brand-ink); }
 
 .comm-sponsor {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 210px;
+  display: flex;
+  flex-direction: column;
   gap: 20px;
-  align-items: center;
+}
+.sponsor-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px 20px;
 }
 .sponsor-copy {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
+  gap: 8px;
+  flex: 1 1 280px;
+}
+.sponsor-btn {
+  margin-top: 2px;
+}
+
+/* ---------- QR Lightbox Dialog ---------- */
+.qr-dialog {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  max-width: min(92vw, 760px);
+  width: fit-content;
+  margin: auto;
+  overflow: visible;
+}
+.qr-dialog::backdrop {
+  background: rgba(12, 13, 16, 0.68);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.qr-dialog-card {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px 18px;
+  box-shadow: var(--shadow-device);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.qr-dialog-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.qr-dialog-head h3 {
+  font-size: 17px;
+  font-weight: 700;
+}
+.qr-dialog-close svg {
+  width: 18px;
+  height: 18px;
+}
+.qr-dialog-body {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 14px;
+  border: 1px solid rgba(17, 19, 24, 0.08);
+  display: flex;
+  justify-content: center;
+}
+.qr-dialog-body img {
+  max-width: min(82vw, 680px);
+  max-height: 70vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.qr-dialog-tip {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
 }
 
 /* ---------- Footer ---------- */
@@ -1969,13 +2086,9 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   .shelf-pill { display: none; }
 
   .dl-card, .install-box, .comm-card { padding: 22px; }
-  .comm-qq { grid-template-columns: 1fr; justify-items: center; text-align: center; }
-  .comm-qq-body { align-items: center; width: 100%; }
-  .copy-box { width: 100%; }
-  .qr-frame-tall { max-width: 210px; }
-
-  .comm-sponsor { grid-template-columns: 1fr; }
-  .qr-frame-wide { max-width: 300px; }
+  .qr-frame-tall { max-width: 224px; }
+  .qr-frame-wide { max-width: 100%; padding: 8px; }
+  .qr-dialog-card { padding: 16px; }
 }
 
 /* ---------- Reduced Motion ---------- */

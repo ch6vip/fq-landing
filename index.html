@@ -665,9 +665,10 @@
       <div class="community-grid">
         <!-- QQ Group -->
         <div class="comm-card comm-qq reveal">
-          <div class="qr-frame qr-frame-tall">
+          <button class="qr-frame qr-frame-tall qr-trigger" type="button" data-qr-src="assets/img/qq-group.webp" data-qr-title="QQ 交流群 · 樱道（726870896）" aria-label="点击放大查看 QQ 交流群二维码">
             <img src="assets/img/qq-group.webp" alt="QQ 交流群二维码：樱道，群号 726870896" width="720" height="1280" loading="lazy" decoding="async">
-          </div>
+            <span class="qr-zoom-hint" aria-hidden="true">点击放大</span>
+          </button>
           <div class="comm-qq-body">
             <span class="bento-tag tag-teal">QQ 交流群 · 樱道</span>
             <h3>扫码或者搜群号进群</h3>
@@ -714,18 +715,21 @@
           </div>
 
           <div class="comm-card comm-sponsor reveal" style="--d:.12s">
-            <div class="sponsor-copy">
-              <span class="bento-tag tag-amber">自愿赞助</span>
-              <h3>请作者喝杯咖啡</h3>
-              <p>如果什锦铺让你的看书和追剧省心了一点，可以通过爱发电、微信或支付宝请喝杯咖啡。完全自愿，用得开心最重要。</p>
-              <a class="btn btn-secondary btn-sm" href="https://afdian.com/a/ch6vip">
+            <div class="sponsor-head">
+              <div class="sponsor-copy">
+                <span class="bento-tag tag-amber">自愿赞助</span>
+                <h3>请作者喝杯咖啡</h3>
+                <p>如果什锦铺让你的看书和追剧省心了一点，可以通过爱发电、微信或支付宝请喝杯咖啡。完全自愿，用得开心最重要。</p>
+              </div>
+              <a class="btn btn-secondary btn-sm sponsor-btn" href="https://afdian.com/a/ch6vip">
                 前往爱发电
                 <span aria-hidden="true">↗</span>
               </a>
             </div>
-            <div class="qr-frame qr-frame-wide">
+            <button class="qr-frame qr-frame-wide qr-trigger" type="button" data-qr-src="assets/img/support.webp" data-qr-title="微信 / 支付宝赞助二维码" aria-label="点击放大查看微信与支付宝赞助二维码">
               <img src="assets/img/support.webp" alt="赞助二维码：微信支付与支付宝" width="1200" height="857" loading="lazy" decoding="async">
-            </div>
+              <span class="qr-zoom-hint" aria-hidden="true">点击放大扫码</span>
+            </button>
           </div>
         </div>
       </div>
@@ -775,6 +779,21 @@
     </div>
   </div>
 </footer>
+
+<dialog class="qr-dialog" id="qr-dialog" aria-labelledby="qr-dialog-title">
+  <div class="qr-dialog-card">
+    <div class="qr-dialog-head">
+      <h3 id="qr-dialog-title">扫描二维码</h3>
+      <button class="icon-btn qr-dialog-close" id="qr-dialog-close" type="button" aria-label="关闭预览">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="qr-dialog-body">
+      <img id="qr-dialog-img" src="" alt="">
+    </div>
+    <p class="qr-dialog-tip">手机直接扫一扫即可，按 Esc 或点击空白处关闭</p>
+  </div>
+</dialog>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

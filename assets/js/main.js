@@ -424,6 +424,40 @@
     });
   });
 
+  /* ---------- QR Lightbox Preview ---------- */
+  (function initQrLightbox() {
+    var dialog = document.getElementById("qr-dialog");
+    var dialogImg = document.getElementById("qr-dialog-img");
+    var dialogTitle = document.getElementById("qr-dialog-title");
+    var closeBtn = document.getElementById("qr-dialog-close");
+    var triggers = Array.prototype.slice.call(document.querySelectorAll("[data-qr-src]"));
+    if (!dialog || !dialogImg || !triggers.length) return;
+
+    triggers.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var src = btn.getAttribute("data-qr-src");
+        var title = btn.getAttribute("data-qr-title") || "扫描二维码";
+        var innerImg = btn.querySelector("img");
+        if (!src) return;
+        if (typeof dialog.showModal !== "function") {
+          window.open(src, "_blank", "noopener");
+          return;
+        }
+        dialogImg.src = src;
+        dialogImg.alt = innerImg ? innerImg.alt : title;
+        if (dialogTitle) dialogTitle.textContent = title;
+        dialog.showModal();
+      });
+    });
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function () { dialog.close(); });
+    }
+    dialog.addEventListener("click", function (e) {
+      if (e.target === dialog) dialog.close();
+    });
+  })();
+
   /* ---------- Copy QQ Number ---------- */
   var copyBtn = document.getElementById("copy-qq");
   var qqNumber = document.getElementById("qq-number");
