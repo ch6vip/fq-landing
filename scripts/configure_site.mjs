@@ -9,13 +9,15 @@ if (site.protocol !== "https:" || site.href !== site.origin + site.pathname) {
 }
 if (!site.pathname.endsWith("/")) site.pathname += "/";
 
-const page = new URL("../index.html", import.meta.url);
-let html = await readFile(page, "utf8");
 const block = /<!-- site-meta:start -->[\s\S]*?<!-- site-meta:end -->/;
-if (!block.test(html)) throw new Error("Site metadata block is missing from index.html.");
 const escape = (value) => value.replaceAll("&", "&amp;").replaceAll('"', "&quot;");
 const canonical = escape(site.href);
 const image = escape(new URL("assets/img/og.jpg", site).href);
+
+const page = new URL("../index.html", import.meta.url);
+let html = await readFile(page, "utf8");
+if (!block.test(html)) throw new Error("Site metadata block is missing from index.html.");
+
 html = html.replace(block, [
   "<!-- site-meta:start -->",
   `<link rel="canonical" href="${canonical}">`,
@@ -24,5 +26,6 @@ html = html.replace(block, [
   `<meta name="twitter:image" content="${image}">`,
   "<!-- site-meta:end -->",
 ].join("\n"));
+
 await writeFile(page, html);
-console.log(`Configured canonical URL and share image: ${site.href}`);
+console.log(`Configured canonical URL and share image in index.html: ${site.href}`);
